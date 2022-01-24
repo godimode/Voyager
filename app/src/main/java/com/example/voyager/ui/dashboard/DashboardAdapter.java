@@ -16,12 +16,19 @@ import java.util.ArrayList;
 
 public class DashboardAdapter extends RecyclerView.Adapter<DashboardAdapter.ItemViewHolder> {
 
+
+    public interface OnItemClickListener {
+        void onItemClick(DashboardItem item, int position);
+    }
+
     Context context;
     ArrayList<DashboardItem> dashboardItems = new ArrayList<DashboardItem>();
     DashboardItemBinding binding;
+    private final OnItemClickListener listener;
 
-    public DashboardAdapter(Context context) {
+    public DashboardAdapter(Context context, OnItemClickListener listener) {
         this.context = context;
+        this.listener = listener;
     }
 
     public void setData(ArrayList<DashboardItem> dashboardItems) {
@@ -38,7 +45,7 @@ public class DashboardAdapter extends RecyclerView.Adapter<DashboardAdapter.Item
 
     @Override
     public void onBindViewHolder(@NonNull ItemViewHolder holder, int position) {
-        holder.bind(dashboardItems.get(position));
+        holder.bind(dashboardItems.get(position), listener);
     }
 
     @Override
@@ -56,16 +63,17 @@ public class DashboardAdapter extends RecyclerView.Adapter<DashboardAdapter.Item
             this.binding = binding;
         }
 
-        void bind(DashboardItem item) {
+        void bind(DashboardItem item, final OnItemClickListener listener) {
             binding.tvDashItemStartTime.setText(item.getStartTime());
             binding.tvDashItemEndTime.setText(item.getEndTime());
             binding.tvDashItemScore.setText(item.getScore());
-        }
-    }
-}
 
-class ItemClickListener {
-    void onClick() {
-        
+            itemView.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View v) {
+                    listener.onItemClick(item, getAdapterPosition());
+                }
+            });
+        }
     }
 }

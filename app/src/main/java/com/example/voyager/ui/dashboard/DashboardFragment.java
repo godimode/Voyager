@@ -37,7 +37,12 @@ public class DashboardFragment extends Fragment {
         binding.setDashboard(dashboardViewModel);
         binding.rvDashboard.setHasFixedSize(true);
 
-        dashboardAdapter = new DashboardAdapter(requireContext());
+        dashboardAdapter = new DashboardAdapter(requireContext(), new DashboardAdapter.OnItemClickListener() {
+            @Override
+            public void onItemClick(DashboardItem item, int position) {
+                Toast.makeText(getActivity(), position + "번째 클릭", Toast.LENGTH_LONG).show();
+            }
+        });
         binding.rvDashboard.setAdapter(dashboardAdapter);
 
         LinearLayoutManager mLinearLayoutManager = new LinearLayoutManager(getActivity());
